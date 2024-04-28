@@ -72,6 +72,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 //SecurityContextHolder.getContext().getAuthentication() --> this is to check whether this user is already authenticated or not
 //if it is null that means we need to authenticate it
 
+            logger.info("Inside Validation !!");
+
             //fetch user detail from username
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
             Boolean validateToken = this.jwtHelper.validateToken(token, userDetails);

@@ -1,5 +1,6 @@
 package com.utkarsh.dietplanner.controller;
 
+import com.utkarsh.dietplanner.Models.ExperimentCustomUser;
 import com.utkarsh.dietplanner.Models.JwtRequest;
 import com.utkarsh.dietplanner.Models.JwtResponse;
 import com.utkarsh.dietplanner.security.JwtHelper;
@@ -33,16 +34,27 @@ public class AuthController {
 
     @Autowired
     private JwtHelper helper;
+    
+    @PostMapping("signup")
+    public String signUp(@RequestBody ExperimentCustomUser user){
+        return customUserDetailsService.saveUser(user);
+    }
 
     @PostMapping("login")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest request){
 
         log.info("Post call have been received at user/add with DTO " + request);
 
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(request.getUsername());
+        log.info("userDetails " + userDetails);
+
+
         this.doAuthenticate(request.getUsername(),request.getPassword());
 
 //        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername(request.getUsername());
+//        UserDetails userDetails = customUserDetailsService.loadUserByUsername(request.getUsername());
+
+        log.info("userDetails " + userDetails);
         String token = helper.generateToken(userDetails);
 
         JwtResponse response = JwtResponse.builder()
@@ -59,7 +71,9 @@ public class AuthController {
             log.info("In try block" + authentication);
 
             manager.authenticate(authentication);
-            log.info("In try block after authenticate");
+            //authenticate verifies the credentials from userDetailsService whichever you are using for this API
+
+            log.info("In try block after authenticate-->"+ authentication);
         }catch (BadCredentialsException e){
             log.info("In catch block" + e);
             throw new BadCredentialsException("Invalid Username or Password !!");

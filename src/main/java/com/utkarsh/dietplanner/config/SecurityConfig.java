@@ -29,6 +29,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth->
                         auth.requestMatchers("/doctor/**").authenticated()
                                 .requestMatchers("/auth/login").permitAll()
+                                .requestMatchers("/auth/signup").permitAll()
                                 .anyRequest().authenticated())
                 .exceptionHandling(ex->ex.authenticationEntryPoint(point))
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

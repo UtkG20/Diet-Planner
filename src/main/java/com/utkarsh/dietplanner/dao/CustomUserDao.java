@@ -1,12 +1,11 @@
 package com.utkarsh.dietplanner.dao;
 
 import com.utkarsh.dietplanner.Models.CustomUser;
+import com.utkarsh.dietplanner.Models.ExperimentCustomUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
-public interface CustomUserDao extends JpaRepository<CustomUser,Integer> {
-    Optional<CustomUser> findByUsername(String username);
+public interface CustomUserDao extends JpaRepository<ExperimentCustomUser,Integer> {
+    ExperimentCustomUser findByUsername(String username);
 }
