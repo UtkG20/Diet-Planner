@@ -14,7 +14,8 @@ import java.util.List;
 @ToString
 @Entity
 @Table(name = "Doctor")
-public class Doctor {
+public class
+Doctor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

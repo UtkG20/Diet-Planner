@@ -54,7 +54,8 @@ public class ExperimentCustomUser implements UserDetails {
 //        this.accountNonLocked = accountNonLocked;
 //        this.authorities = Collections.unmodifiableSet(sortAuthorities(authorities));
     }
-    
+
+    public Integer getUserId(){return this.userId;}
     
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -87,6 +88,18 @@ public class ExperimentCustomUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void setAge(Integer age){
+        this.age = age;
+    }
+
+    public void setUsername(String username){
+        this.username = username;
+    }
+
+    public  void setPassword(String password){
+        this.password = password;
     }
 
 //    private static SortedSet<GrantedAuthority> sortAuthorities(Collection<? extends GrantedAuthority> authorities) {

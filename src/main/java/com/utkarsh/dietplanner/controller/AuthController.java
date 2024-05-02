@@ -17,6 +17,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+import java.util.List;
+
 @RestController
 @RequestMapping("auth")
 public class AuthController {
@@ -34,10 +37,30 @@ public class AuthController {
 
     @Autowired
     private JwtHelper helper;
-    
+
     @PostMapping("signup")
     public String signUp(@RequestBody ExperimentCustomUser user){
         return customUserDetailsService.saveUser(user);
+    }
+
+    @GetMapping("allUsers")
+    public List<ExperimentCustomUser> getAllUsers(){
+        return customUserDetailsService.getAllUsers();
+    }
+
+    @GetMapping("currentUser")
+    public String getLoggedInUser(Principal principal){
+        return principal.getName();
+    }
+
+    @GetMapping("currentUserAge")
+    public Integer getAge(Principal principal){
+        return customUserDetailsService.getUserByUsername(principal.getName()).getAge();
+    }
+
+    @PutMapping("updateUser/{userId}")
+    public String updateUser(@PathVariable Integer userId,@RequestBody ExperimentCustomUser user){
+        return customUserDetailsService.updateUser(userId,user);
     }
 
     @PostMapping("login")
