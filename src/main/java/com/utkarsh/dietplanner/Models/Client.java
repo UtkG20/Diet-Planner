@@ -20,7 +20,7 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer clientId;
 
-    private String name;
+    private String username;
 
     private String password;
     private Integer age;
