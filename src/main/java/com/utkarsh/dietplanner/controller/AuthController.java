@@ -27,9 +27,6 @@ public class AuthController {
     private final Logger log = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
