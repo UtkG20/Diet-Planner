@@ -30,11 +30,15 @@ public class SecurityConfig {
                         auth.requestMatchers("/doctor/**").authenticated()
                                 .requestMatchers("/auth/login").permitAll()
                                 .requestMatchers("/auth/signup").permitAll()
-                                .anyRequest().authenticated())
+                                .requestMatchers("/client/login").permitAll()
+                                .requestMatchers("/client/signup").permitAll()
+                                .anyRequest().authenticated()
+                )
                 .exceptionHandling(ex->ex.authenticationEntryPoint(point))
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
         http.formLogin(Customizer.withDefaults());
         return http.build();
     }
+
 }

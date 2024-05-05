@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ClientService implements UserDetailsService {
+public class ClientService implements UserDetailsService{
 
     @Autowired
     ClientDao clientDao;
