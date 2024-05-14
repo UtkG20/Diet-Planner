@@ -26,9 +26,16 @@ public class Meal {
     @ManyToOne
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
+
+    @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
 
     @OneToMany(mappedBy = "meal",cascade = CascadeType.ALL)
     private List<Schedule> scheduleList = new ArrayList<>();
+
+    @PrePersist
+    private void onCreate(){
+        creationDate = new Date();
+    }
 
 }

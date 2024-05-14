@@ -1,5 +1,7 @@
 package com.utkarsh.dietplanner.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.*;
@@ -11,32 +13,26 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.function.Function;
 
-//@Getter
-//@Setter
-//@AllArgsConstructor
-//@NoArgsConstructor
-//@Builder
-//@ToString
-//@Data
 @Entity
 @Table(name = "client")
 public class Client implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer clientId;
+        private Integer clientId;
     private static final long serialVersionUID = 620L;
     private String username;
     private String password;
     private Integer age;
 
-
-
-    @ManyToMany
+    @ManyToMany(mappedBy = "clientList")
     private List<Doctor> doctors = new ArrayList<>();
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     private List<Schedule> scheduleList = new ArrayList<>();
+
+
+
 
     public Client(){}
 
@@ -87,6 +83,7 @@ public class Client implements UserDetails {
         }
     }
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {return Collections.emptyList();}
 
@@ -103,15 +100,23 @@ public class Client implements UserDetails {
     public Integer getAge(){return this.age;}
     public void setAge(Integer age){this.age = age;}
 
+    public List<Doctor> getDoctors(){
+        return this.doctors;
+    }
+
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {return true;}
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {return true;}
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {return true;}
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {return true;}
 

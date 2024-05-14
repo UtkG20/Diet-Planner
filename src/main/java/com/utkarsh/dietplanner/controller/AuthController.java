@@ -97,6 +97,9 @@ public class AuthController {
         }catch (BadCredentialsException e){
             log.info("In catch block" + e);
             throw new BadCredentialsException("Invalid Username or Password !!");
+        }catch (Exception e){
+            log.info("Exception"+ e);
+//            throw new Exception()
         }
     }
 

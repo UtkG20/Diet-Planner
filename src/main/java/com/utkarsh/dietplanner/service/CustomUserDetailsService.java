@@ -1,9 +1,12 @@
 package com.utkarsh.dietplanner.service;
 
+import com.utkarsh.dietplanner.Models.Client;
 import com.utkarsh.dietplanner.Models.CustomUser;
+import com.utkarsh.dietplanner.Models.Doctor;
 import com.utkarsh.dietplanner.Models.ExperimentCustomUser;
 import com.utkarsh.dietplanner.controller.AuthController;
 import com.utkarsh.dietplanner.dao.CustomUserDao;
+import com.utkarsh.dietplanner.dao.DoctorDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.utkarsh.dietplanner.dao.ClientDao;
 
 import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.ArrayList;
@@ -28,15 +32,27 @@ public class CustomUserDetailsService implements UserDetailsService{
     @Autowired
     CustomUserDao customUserDao;
 
+    @Autowired
+    ClientDao clientDao;
+
+    @Autowired
+    DoctorDao doctorDao;
+
     private PasswordEncoder passwordEncoder;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
 
-        ExperimentCustomUser customUser = customUserDao.findByUsername(username.toString());
+        ExperimentCustomUser customUser = customUserDao.findByUsername(username);
+        if(customUser!=null) return customUser;
 
-            return customUser;
+        Doctor doctor = doctorDao.findByUsername(username);
+        if(doctor!=null) return doctor;
 
+        Client client = clientDao.findByUsername(username);
+        if(client!=null) return client;
+
+        return null;
 
     }
 

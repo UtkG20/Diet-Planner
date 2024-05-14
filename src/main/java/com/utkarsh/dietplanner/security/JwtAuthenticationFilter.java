@@ -2,6 +2,7 @@ package com.utkarsh.dietplanner.security;
 
 import com.utkarsh.dietplanner.service.ClientService;
 import com.utkarsh.dietplanner.service.CustomUserDetailsService;
+import com.utkarsh.dietplanner.service.DoctorService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
@@ -35,12 +36,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private ClientService clientService;
 
+    @Autowired
+    private DoctorService doctorService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String requestURI = request.getRequestURI();
-
-//        if (requestURI.startsWith("/auth/")){
 
             String requestHeader = request.getHeader("Authorization");
             //Bearer 2352345235sdfrsfgsdfsdf
@@ -85,13 +87,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 UserDetails userDetails;
                 if (requestURI.startsWith("/auth/")){
                     userDetails = this.userDetailsService.loadUserByUsername(username);
-                }else{
+                }else if(requestURI.startsWith("/client/")){
                     userDetails = this.clientService.loadUserByUsername(username);
+                }else {
+                    userDetails = this.doctorService.loadUserByUsername(username);
                 }
+
+                logger.info("Inside Validation with userId!!" + userDetails);
 
                 Boolean validateToken = this.jwtHelper.validateToken(token, userDetails);
                 if (validateToken) {
 
+                    logger.info("Inside if" + validateToken);
                     //set the authentication
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -104,11 +111,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
             }
-//        }
 
 
         logger.info("before filterChain.doFilter");
-        filterChain.doFilter(request, response);
+            try{
+                filterChain.doFilter(request, response);
+            }catch (Exception e){
+                logger.info("Exception"+e);
+            }
+//        filterChain.doFilter(request, response);
+
         logger.info("after filterChain.doFilter"+ response);
     }
 }
