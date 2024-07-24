@@ -31,6 +31,8 @@ public class Client implements UserDetails {
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     private List<Schedule> scheduleList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "client",cascade = CascadeType.ALL)
+    private List<Appointment> appointments = new ArrayList<>();
 
 
 
@@ -103,6 +105,8 @@ public class Client implements UserDetails {
     public List<Doctor> getDoctors(){
         return this.doctors;
     }
+
+    public List<Appointment> getAppointments(){return this.appointments;}
 
     @JsonIgnore
     @Override

@@ -1,8 +1,6 @@
 package com.utkarsh.dietplanner.controller;
 
-import com.utkarsh.dietplanner.Models.Client;
-import com.utkarsh.dietplanner.Models.JwtRequest;
-import com.utkarsh.dietplanner.Models.JwtResponse;
+import com.utkarsh.dietplanner.Models.*;
 import com.utkarsh.dietplanner.dataTransferObject.MealDTO;
 import com.utkarsh.dietplanner.security.JwtHelper;
 import com.utkarsh.dietplanner.service.ClientService;
@@ -59,8 +57,13 @@ public class ClientController {
     }
 
     @GetMapping("currentUser")
-    public String getLoggedInUser(Principal principal){
-        return principal.getName();
+    public ResponseEntity<String> getLoggedInUser(Principal principal){
+        try{
+            return new ResponseEntity<>(principal.getName(),HttpStatus.OK);
+        }catch(Exception e){
+            return  new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
     }
 
     @GetMapping("currentUserAge")
@@ -82,15 +85,25 @@ public class ClientController {
         }
     }
 
-    @GetMapping("getSchedule/date/{date}")
-    public List<MealDTO> getScheduleByDate(@PathVariable @DateTimeFormat(pattern = "yyyy-mm-dd") LocalDate date){
+    @GetMapping("getSchedule/date/{date}/{mealType}")
+    public ResponseEntity<MealDTO> getScheduleByDate(@PathVariable @DateTimeFormat(pattern = "yyyy-mm-dd") LocalDate date, @PathVariable MealType mealType){
 //        Integer clientId = clientService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).getClientId();
         Client client = clientService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
 //        return clientService.getScheduleByDate(date,clientId);
-        return clientService.getScheduleByDate(date,client);
+
+//        return new ResponseEntity<>(clientService.getScheduleByDate(date,client,mealType), HttpStatus.OK);
+        return clientService.getScheduleByDate(date,client,mealType);
     }
 
-    @PostMapping("login")
+    @PostMapping("newAppointment")
+    public ResponseEntity<String> createNewAppointment(@RequestBody AppointmentRequest request){
+
+        Client client = clientService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        return clientService.createNewAppointment(client,request);
+    }
+
+    @PostMapping(value = "login", consumes = "application/json", produces = "application/json")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest request){
 
         log.info("Post call have been received at user/add with DTO " + request);

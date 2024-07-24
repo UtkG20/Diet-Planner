@@ -44,6 +44,9 @@ public class Doctor  implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "clientId"),uniqueConstraints = @UniqueConstraint(columnNames = {"docId","clientId"}))
     private List<Client> clientList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "doctor",cascade = CascadeType.ALL)
+    private List<Appointment> appointments = new ArrayList<>();
+
     public Doctor(){}
 
     public Doctor(String username, String password, Integer age){
@@ -82,6 +85,9 @@ public class Doctor  implements UserDetails {
     public List<Meal> getMealList(){
         return this.mealList;
     }
+
+    @JsonIgnore
+    public List<Appointment> getAppointments(){return this.appointments;}
 
     @JsonIgnore
     @Override
